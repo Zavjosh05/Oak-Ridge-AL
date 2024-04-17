@@ -17,15 +17,19 @@ void mtxIn(Matriz, Matriz *);
 void mtxAum(Matriz, Matriz, Matriz *);
 int mtxInv(Matriz, Matriz *);
 void swap(Matriz, int, int);
+void mult(Matriz, Matriz, Matriz);
+void comp(Matriz, Matriz);
 
 int main(int argv, char **argc){
-    int m= 3, n=3, ret;
+    int m= 2, n=2, ret;
     Matriz a, b;
     consMtx(&a, m, n);
 
     ret = mtxInv(a, &b);
     if(ret == 1){
         imp(b);
+        puts("=====================");
+        comp(a, b);
     }else if(ret == 0){
         printf("La matriz es no inversible. \n");
     }
@@ -145,11 +149,44 @@ void swap(Matriz a, int i, int j){
     a.mtx[j] = aux;
 }
 
+void mult(Matriz a, Matriz b, Matriz c){
+    if(a.n == b.m){
+        int i, j, k;
+        fillZero(c);
+        if(c.m != a.m || c.n != b.m){
+            c.m = a.m;
+            c.n = b.n;
+        }
+        for(i=0; i<b.n; i++){
+            for(j=0; j<a.m; j++){
+                for(k=0; k<a.n; k++){
+                    c.mtx[j][i] += (a.mtx[j][k])*(b.mtx[k][i]);
+                }
+            }
+        }
+    }else{
+        printf("(!) El numero de columnas de la primera matriz debe de ser igual al numero de filas de la segunda matriz.");
+    }
+}
+
+void comp(Matriz a, Matriz b){
+    Matriz c;
+    c.m = a.m;
+    c.n = a.n;
+    initMatrix(&c);
+    mult(a, b, c);
+    printf("A(A^-1) = \n");
+    imp(c);
+    puts("***************************");
+    mult(a, b, c);
+    printf("(A^-1)A = \n");
+    imp(c);
+}
+
 int mtxInv(Matriz a, Matriz *aInv){
     if(a.m == a.n){
-        int PRUEBA = 0;
         Matriz aum;
-        int i, j, k, flg = 0;
+        int i, j, k, flg = 0, simp = 0;
         float x, y;
         mtxIn(a, aInv);
         mtxAum(a, *aInv, &aum);
@@ -170,20 +207,25 @@ int mtxInv(Matriz a, Matriz *aInv){
             x = aum.mtx[i][i];
             for(j=0; j<aum.m; j++){
                 y = aum.mtx[j][i];
-                for(k=0; k<aum.n; k++){
-                    PRUEBA += 1;
-                    if(j == 0 && x != 1){
-                        aum.mtx[i][k] = aum.mtx[i][k]/x;
-                    }else if(i==j && x == 1){
-                        k = aum.n;
-                        flg = 1;
-                    }
-                    if(i != j){
+                if(i!=j){
+                    for(k=0; k<aum.m; k++){
+                        if(!simp && x != 1){
+                            aum.mtx[i][k] = aum.mtx[i][k]/x;
+                            aum.mtx[i][aum.m+k] = aum.mtx[i][aum.m+k]/x;
+                            if(k == aum.m-1){
+                                simp = 1;
+                            }
+                        }
+
                         aum.mtx[j][k] = aum.mtx[j][k] - y*aum.mtx[i][k];
+                        aum.mtx[j][aum.m+k] = aum.mtx[j][aum.m+k] - y*aum.mtx[i][aum.m+k];
+
+                        if(aum.mtx[j][k] != 0){
+                                flg = 1;
+                        }
                     }
-                    if(k < aum.m && aum.mtx[j][k] != 0){
-                            flg = 1;
-                    }
+                }else{
+                    flg = 1;
                 }
 
                 if(!flg){
@@ -191,11 +233,10 @@ int mtxInv(Matriz a, Matriz *aInv){
                 }else{
                     flg = 0;
                 }
-
             }
+            simp = 0;
         }
 
-        printf("%d \n", PRUEBA);
         ladoDer(aum, *aInv);
         destMtx(&aum);
         return 1;
