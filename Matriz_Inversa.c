@@ -20,10 +20,12 @@ void swap(Matriz, int, int);
 void mult(Matriz, Matriz, Matriz);
 void comp(Matriz, Matriz);
 void copy(Matriz, Matriz *);
+void OrMtx(int*, int*);
 
 int main(int argv, char **argc){
-    int m= 3, n=3, ret;
+    int m, n, ret;
     Matriz a, b;
+    OrMtx(&m,&n);
     consMtx(&a, m, n);
 
     ret = mtxInv(a, &b);
@@ -51,16 +53,18 @@ void consMtx(Matriz *a, int m, int n){
     puts("2. Generar datos");
     while(0==0){
         scanf("%s", &c);
-        if(c=='1'){
-            printf("Llena la matriz %d x %d: \n", m, n);
-            fill(*a);
-            break;
-        }else if(c=='2'){
-            fillRand(*a);
-            break;
+        switch(c){
+            case '1':
+                printf("Llena la matriz %d x %d: \n", m, n);
+                fill(*a);
+                break;
+            case '2':
+                fillRand(*a);
+                break;
+            default:
+                puts("Opción no existente\n");
+                consMTX(a,m,n);
         }
-        else
-            puts("opción no válida");
     }
     puts("==========");
     imp(*a);
@@ -105,7 +109,7 @@ void fill(Matriz a){
     }
 }
 
-//inicializacion con 0 de matriz
+//inicializacion de matriz con 0
 void fillZero(Matriz a){
     int i, j;
     for(i=0; i<a.m; i++){
@@ -115,6 +119,7 @@ void fillZero(Matriz a){
     }
 }
 
+//Llenado aleatorio de matriz
 void fillRand(Matriz a){
     int i, j, ranInt;
     for(i=0; i<a.m; i++)
@@ -124,7 +129,7 @@ void fillRand(Matriz a){
                 a.mtx[i][j] = rand()*(-10);
             else
                 a.mtx[i][j] = rand()*50;
-        }
+        }
 }
 
 //Construccion de matriz identidad
@@ -148,6 +153,7 @@ void mtxIn(Matriz a, Matriz *b){
     }
 }
 
+//intercambio de filas
 void swap(Matriz a, int i, int j){
     float *aux = a.mtx[i];
     a.mtx[i] = a.mtx[j];
@@ -264,4 +270,16 @@ int mtxInv(Matriz aOr, Matriz *aInv){
         printf("(!) Esta funcion requiere de una matriz de orden n. \n");
         return -1;
     }
+}
+
+//Asignación del orden de la matriz
+void OrMtx(int *m, int *n)
+{
+    int x;
+
+    puts("Ingrese el orden de la matriz: ");
+    scanf("%d", &x);
+
+    *n = x; 
+    *m = x;
 }
