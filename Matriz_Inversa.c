@@ -13,6 +13,7 @@ void destMtx(Matriz *);
 void fill(Matriz);
 void imp(Matriz);
 void fillZero(Matriz);
+void fillRand(Matriz);
 void mtxIn(Matriz, Matriz *);
 int mtxInv(Matriz, Matriz *);
 void swap(Matriz, int, int);
@@ -38,25 +39,42 @@ int main(int argv, char **argc){
     return 0;
 }
 
+//construcción de Matriz
 void consMtx(Matriz *a, int m, int n){
     a->m = m;
     (*a).n = n;
+    char c;
     initMatrix(a);
     puts("Matriz construida");
-    printf("Llena la matriz %d x %d: \n", m, n);
-    fill(*a);
+    puts("Deseas Llenar la matriz manualmente o generar sus datos aleatoreamente?");
+    puts("1. Llenar manualmente");
+    puts("2. Generar datos");
+    while(0==0){
+        scanf("%s", &c);
+        if(c=='1'){
+            printf("Llena la matriz %d x %d: \n", m, n);
+            fill(*a);
+            break;
+        }else if(c=='2'){
+            fillRand(*a);
+            break;
+        }
+        else
+            puts("opción no válida");
+    }
     puts("==========");
     imp(*a);
     puts("==========");
-
 }
 
+//inicializacion de matriz
 void initMatrix(Matriz *x){
     x->mtx = malloc(x->m * sizeof(float *));
     for(int i=0; i < x->m; i++)
         x->mtx[i] = malloc(x->n * sizeof(float));
 }
 
+//liberacion de matriz
 void destMtx(Matriz *a){
     int i;
     for(i = 0; i<(*a).m; i++)
@@ -65,6 +83,7 @@ void destMtx(Matriz *a){
     (*a).mtx = NULL;
 }
 
+//impresion de matriz
 void imp(Matriz a){
     int i, j;
     for(i=0; i<a.m; i++){
@@ -76,6 +95,7 @@ void imp(Matriz a){
     }
 }
 
+//llenado de matriz
 void fill(Matriz a){
     int i, j;
     for(i=0; i<a.m; i++){
@@ -85,6 +105,7 @@ void fill(Matriz a){
     }
 }
 
+//inicializacion con 0 de matriz
 void fillZero(Matriz a){
     int i, j;
     for(i=0; i<a.m; i++){
@@ -94,6 +115,19 @@ void fillZero(Matriz a){
     }
 }
 
+void fillRand(Matriz a){
+    int i, j, ranInt;
+    for(i=0; i<a.m; i++)
+        for(j=0; j<a.n; j++){
+            ranInt = rand()%2;
+            if (ranInt == 0)
+                a.mtx[i][j] = rand()*(-10);
+            else
+                a.mtx[i][j] = rand()*50;
+        }
+}
+
+//Construccion de matriz identidad
 void mtxIn(Matriz a, Matriz *b){
     if(a.m == a.n){
         b->m = a.m;
