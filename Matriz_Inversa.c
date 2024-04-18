@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
 
 typedef struct{
     float **mtx;
@@ -21,11 +23,18 @@ void mult(Matriz, Matriz, Matriz);
 void comp(Matriz, Matriz);
 void copy(Matriz, Matriz *);
 void OrMtx(int*, int*);
+int verDim(char*,char*);
+int verInt(char*);
+int StrToInt(char*);
+int ChrToInt(char);
+int powJ(int,int);
 
-int main(int argv, char **argc){
+
+int main(int argc, char **argv){
     int m, n, ret;
     Matriz a, b;
     OrMtx(&m,&n);
+    printf("m = %d, n = %d\n",m,n);
     consMtx(&a, m, n);
 
     ret = mtxInv(a, &b);
@@ -47,7 +56,7 @@ void consMtx(Matriz *a, int m, int n){
     (*a).n = n;
     char c;
     initMatrix(a);
-    puts("Matriz construida");
+    puts("Menú :v");
     puts("Deseas Llenar la matriz manualmente o generar sus datos aleatoreamente?");
     puts("1. Llenar manualmente");
     puts("2. Generar datos");
@@ -63,7 +72,8 @@ void consMtx(Matriz *a, int m, int n){
                 break;
             default:
                 puts("Opción no existente\n");
-                consMTX(a,m,n);
+                fflush(stdin);
+                //consMtx(a,m,n);
         }
     }
     puts("==========");
@@ -275,11 +285,79 @@ int mtxInv(Matriz aOr, Matriz *aInv){
 //Asignación del orden de la matriz
 void OrMtx(int *m, int *n)
 {
-    int x;
+    char ms[5], ns[5];
 
-    puts("Ingrese el orden de la matriz: ");
-    scanf("%d", &x);
+    puts("Ingrese las dimensiones de la matriz\n");
+    printf("m = ");
+    scanf("%s", ms);
+    putchar('\n');
+    printf("n = ");
+    scanf("%s", ns);
+    putchar('\n');
 
-    *n = x; 
-    *m = x;
+    if(verDim(ms,ns))
+    {
+        *m = StrToInt(ms);
+        *n = StrToInt(ns);
+
+        if(*m == *n)
+            printf("Orden de la matriz: %d\n",*m);
+        else
+            {
+                puts("\n(!) La matriz debe de ser cuadrada (!)");
+                OrMtx(m,n);
+            }
+        
+    }else
+        {
+            puts("\n(!) Inserte enteros positivos validos (!)\n");
+            OrMtx(m,n);
+        }
 }
+
+//funcion que verifica si los numeros si son numeros :v
+int verDim(char *m, char *n)
+{
+    if(verInt(m)&&verInt(n))
+        return 1;
+    else
+        return 0;
+}
+
+int verInt(char *x)
+{
+    int i;
+
+    for(i = 0; i < strlen(x); i++)
+        if(!isdigit(*(x+i)))
+            return 0;
+    
+    return 1;
+}
+
+int ChrToInt(char c){return c - '0';}
+
+int powJ(int b, int e)
+{
+    int n = 1;
+
+    if(e == 0)
+        return 1;
+
+    for(; e > 0; e--)
+        n  *= b;
+
+    return n;
+}
+
+int StrToInt(char *ch)
+{
+    int i,j, res = 0;
+
+    for(i = strlen(ch)-1, j = 0; i >= 0; i--,j++)
+        res += ChrToInt(*(ch+j))*powJ(10,i);
+
+    return res;
+}
+
+
