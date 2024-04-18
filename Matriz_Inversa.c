@@ -52,23 +52,28 @@ int main(int argc, char **argv){
 
 //construcción de Matriz
 void consMtx(Matriz *a, int m, int n){
+    char c;
+    int d = 1;
+
     a->m = m;
     (*a).n = n;
-    char c;
+    
     initMatrix(a);
-    puts("Menú :v");
+    puts("Menu :v");
     puts("Deseas Llenar la matriz manualmente o generar sus datos aleatoreamente?");
     puts("1. Llenar manualmente");
     puts("2. Generar datos");
-    while(0==0){
+    while(d){
         scanf("%s", &c);
         switch(c){
             case '1':
                 printf("Llena la matriz %d x %d: \n", m, n);
                 fill(*a);
+                d = 0;
                 break;
             case '2':
                 fillRand(*a);
+                d = 0;
                 break;
             default:
                 puts("Opción no existente\n");
