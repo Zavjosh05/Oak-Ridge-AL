@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
+//#include <ctype.h>
 #include <string.h>
 
 typedef struct{
@@ -23,6 +23,7 @@ void mult(Matriz, Matriz, Matriz);
 void comp(Matriz, Matriz);
 void copy(Matriz, Matriz *);
 void OrMtx(int*, int*);
+int isdigitJ(char);
 int verDim(char*,char*);
 int verInt(char*);
 int StrToInt(char*);
@@ -338,13 +339,21 @@ int verDim(char *m, char *n)
         return 0;
 }
 
+int isdigitJ(char x)
+{
+    if(x >= '0'  && x <= '9')
+        return 1;
+    else
+        return 0;
+}
+
 //predicado para verificar si la cadena de caracteres solo contiene nums :v
 int verInt(char *x)
 {
     int i;
 
     for(i = 0; i < strlen(x); i++)
-        if(!isdigit(*(x+i)))
+        if(!isdigitJ(*(x+i)))
             return 0;
     
     return 1;
