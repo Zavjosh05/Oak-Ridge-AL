@@ -28,6 +28,7 @@ int verInt(char*);
 int StrToInt(char*);
 int ChrToInt(char);
 int powJ(int,int);
+int verFlt(float);
 
 
 int main(int argc, char **argv){
@@ -117,9 +118,17 @@ void imp(Matriz a){
 //llenado de matriz
 void fill(Matriz a){
     int i, j;
+    float x;
     for(i=0; i<a.m; i++){
         for(j=0; j<a.n; j++){
+            printf("[A]%dx%d = ",i,j);
             scanf("%f", &a.mtx[i][j]);
+            putchar('\n');
+            /*if(!verFlt(a.mtx[i][j]))
+            {
+                puts("(!) Ingrese un flotante valido (!)");
+                j--;
+            }*/
         }
     }
 }
@@ -329,6 +338,7 @@ int verDim(char *m, char *n)
         return 0;
 }
 
+//predicado para verificar si la cadena de caracteres solo contiene nums :v
 int verInt(char *x)
 {
     int i;
@@ -365,4 +375,10 @@ int StrToInt(char *ch)
     return res;
 }
 
-
+int verFlt(float x)
+{
+    if(scanf("%f",&x) == 1)
+        return 1;
+    else 
+        return 0;
+}
