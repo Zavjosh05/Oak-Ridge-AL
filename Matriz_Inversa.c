@@ -36,6 +36,7 @@ int CountDot(char*);
 int checkFloat(char);
 float StrToFlt(char*);
 float ChrToFlt(char);
+void NotNegZero(Matriz*);
 
 
 int main(int argc, char **argv){
@@ -46,6 +47,7 @@ int main(int argc, char **argv){
     consMtx(&a, m, n);
 
     ret = mtxInv(a, &b);
+    NotNegZero(&b);
     if(ret == 1){
         imp(b);
         puts("===========================");
@@ -71,7 +73,7 @@ void consMtx(Matriz *a, int m, int n){
     puts("Deseas Llenar la matriz manualmente o generar sus datos aleatoreamente?");
     puts("1. Llenar manualmente");
     puts("2. Generar datos");
-    while(d){
+    while(d==1){
         scanf("%s", &c);
         switch(c){
             case '1':
@@ -85,7 +87,9 @@ void consMtx(Matriz *a, int m, int n){
                 break;
             default:
                 puts("Opción no existente\n");
+                d = 1;
                 fflush(stdin);
+                break;
                 //consMtx(a,m,n);
         }
     }
@@ -580,4 +584,14 @@ float ChrToFlt(char x)
 {
     if(x >= '0' && x<= '9')
         return x - 48;
+}
+
+void NotNegZero(Matriz *x)
+{
+    int i,j;
+
+    for(i = 0; i < x->m; i++)
+        for(j = 0; j < x->n; j++)
+            if(x->mtx[i][j] == -0)
+                x->mtx[i][j] *= -0;
 }
