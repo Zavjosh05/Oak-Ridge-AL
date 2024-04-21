@@ -29,7 +29,13 @@ int verInt(char*);
 int StrToInt(char*);
 int ChrToInt(char);
 int powJ(int,int);
-int verFlt(float);
+int verFltJ(char*);
+int verSign(char*);
+int isFloat(char*);
+int CountDot(char*);
+int checkFloat(char);
+float StrToFlt(char*);
+float ChrToFlt(char);
 
 
 int main(int argc, char **argv){
@@ -119,17 +125,22 @@ void imp(Matriz a){
 //llenado de matriz
 void fill(Matriz a){
     int i, j;
-    float x;
+    char x[100];
     for(i=0; i<a.m; i++){
         for(j=0; j<a.n; j++){
-            printf("[A]%dx%d = ",i,j);
-            scanf("%f", &a.mtx[i][j]);
-            putchar('\n');
-            /*if(!verFlt(a.mtx[i][j]))
+            printf("[A]%dx%d = ",i+1,j+1);
+            scanf("%s", x);
+            //
+            if(verFltJ(x))
+            {
+                a.mtx[i][j] = StrToFlt(x);
+                printf("[a]%dx%d = %.2f\n\n",i+1,j+1,a.mtx[i][j]);
+            }
+            else
             {
                 puts("(!) Ingrese un flotante valido (!)");
                 j--;
-            }*/
+            }
         }
     }
 }
@@ -363,12 +374,12 @@ int ChrToInt(char c){return c - '0';}
 
 int powJ(int b, int e)
 {
-    int n = 1;
+    int n;
 
     if(e == 0)
         return 1;
 
-    for(; e > 0; e--)
+    for(n = 1; e > 0; e--)
         n  *= b;
 
     return n;
@@ -384,10 +395,189 @@ int StrToInt(char *ch)
     return res;
 }
 
-int verFlt(float x)
+int verFltJ(char *fl)
 {
-    if(scanf("%f",&x) == 1)
+    int ver = verSign(fl);
+
+    if(ver)
+        if(ver == 1)
+        {
+            if(isFloat(fl+1))
+                return 1;
+            else return 0;
+        }
+        else
+        {
+            if(isFloat(fl))
+                return 1;
+            else return 0;
+        }
+
+    else return 0;
+
+}
+
+int verSign(char *fl)
+{
+    if(*fl == '-')
         return 1;
-    else 
+    else if(*fl == '.' || isdigitJ(*fl))
+            return 2;
+        else return 0;
+}
+
+int isFloat(char *x)
+{
+    int i;
+
+    if(strlen(x)==1 && *x == '.')
         return 0;
+    else
+    {
+        if(CountDot(x) == 0 || CountDot(x) == 1)
+        {
+        for(i = 0; i < strlen(x); i++)
+        {
+            if(!checkFloat(*(x + i)))
+                return 0;
+        }
+        return 1;
+        }
+        else 
+            return 0;
+    }
+    
+}
+
+int CountDot(char *x)
+{
+    int count = 0,i;
+
+    for(i = 0; i < strlen(x); i ++)
+    {
+        if(*(x + i) == '.')
+            count++;
+    }
+
+    return count;
+}
+
+int checkFloat(char x)
+{
+    if(isdigitJ(x) || x == '.')
+        return 1;
+    else
+        return 0;
+}
+
+float powJFlt(float b, int e)
+{
+    int i;
+    float res = 1;
+    
+    if(e >= 0)
+    {
+        for(i = 1; i <= e; i++)
+            res *= b;
+        return res;
+    }
+    else
+    {
+        e *= -1;
+        for(i = 0; i < e; i++)
+            res *= b;
+        return 1/res;
+    }
+}
+
+int DotLoc(char *x)
+{
+    int i, count = 0;
+
+    for(i = 0; i < strlen(x); i++)
+    {
+        if(*(x + i) == '.')
+            return count;
+        else count++;
+    }
+
+    return -1;
+}
+
+float StrToFlt(char *x)
+{
+    int i,j, dotcount;
+    float res = 0;
+
+    dotcount = DotLoc(x);
+
+    if(dotcount == -1)
+    {
+        if(*x == '-')
+        {
+            x += 1;
+
+            for(i = strlen(x)-1, j = 0; i >= 0; i--,j++)
+                res += ChrToFlt(*(x+j))*powJFlt(10,i);
+            res = -res;
+        }
+        else
+        {
+            for(i = strlen(x)-1, j = 0; i >= 0; i--,j++)
+                res += ChrToFlt(*(x+j))*powJFlt(10,i);
+        }
+    }
+    else if(dotcount == 0)
+        {
+            x += 1;
+
+            for(i = -strlen(x), j = 0; i <= 0; i++, j++)
+            res += ChrToFlt(*(x+j))*powJFlt(10,i);
+        }
+        else if(dotcount == 1)
+            {
+                if(*x == '-')
+                {
+                    for(i = -1, j=2; j < strlen(x); i--,j++)
+                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
+                    res = -res;
+                }
+                else
+                {
+                    for(i = dotcount-1, j = 0; i >= 0; i--, j++)
+                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
+                    for(i = -1, j=dotcount+1; j < strlen(x); i--,j++)
+                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
+                }
+            }
+            else
+            {
+                if(*x == '-')
+                {
+                    x += 1;
+
+                    for(i = dotcount, j = 0; i >= 0; i--, j++)
+                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
+                    for(i = -1, j=dotcount; j < strlen(x); i--,j++)
+                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
+
+                    res = -res;
+                }
+                else
+                {
+                    for(i = dotcount-1, j = 0; i >= 0; i--, j++)
+                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
+                    for(i = -1, j=dotcount+1; j < strlen(x); i--,j++)
+                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
+                }
+                
+            }
+
+    return res;
+}
+
+float ChrToFlt(char x)
+{
+    if(x >= '0' && x<= '9')
+        return x - 48;
 }
