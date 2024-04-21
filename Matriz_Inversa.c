@@ -37,6 +37,7 @@ int checkFloat(char);
 float StrToFlt(char*);
 float ChrToFlt(char);
 void NotNegZero(Matriz*);
+void Menu(Matriz*,int,int);
 
 
 int main(int argc, char **argv){
@@ -69,6 +70,8 @@ void consMtx(Matriz *a, int m, int n){
     (*a).n = n;
     
     initMatrix(a);
+    Menu(a,m,n);
+    /*
     puts("Menu :v");
     puts("Deseas Llenar la matriz manualmente o generar sus datos aleatoreamente?");
     puts("1. Llenar manualmente");
@@ -92,10 +95,40 @@ void consMtx(Matriz *a, int m, int n){
                 break;
                 //consMtx(a,m,n);
         }
-    }
+    }*/
     puts("==========");
     imp(*a);
     puts("==========");
+}
+
+void Menu(Matriz *a, int m, int n)
+{
+    int d=1;
+    char c;
+
+    while(d==1){
+        puts("Menu :v");
+        puts("Deseas Llenar la matriz manualmente o generar sus datos aleatoreamente?");
+        puts("1. Llenar manualmente");
+        puts("2. Generar datos");
+        fseek(stdin,0,SEEK_END);
+        c = getchar();
+        switch(c){
+            case '1':
+                printf("Llena la matriz %d x %d: \n", m, n);
+                fill(*a);
+                d = 0;
+                break;
+            case '2':
+                fillRand(*a);
+                d = 0;
+                break;
+            default:
+                puts("Opción no existente\n\n");
+                fflush(stdin);
+                break;
+        }
+    }
 }
 
 //inicializacion de matriz
