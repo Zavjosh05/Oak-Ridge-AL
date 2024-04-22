@@ -388,6 +388,7 @@ int verFltJ(char *fl){
     else return 0;
 }
 
+//Verificación del signo de una cadena.
 int verSign(char *fl){
     if(*fl == '-')
         return 1;
@@ -396,6 +397,7 @@ int verSign(char *fl){
         else return 0;
 }
 
+//Verificacion si una cadena es un flotante.
 int isFloat(char *x){
     int i;
     if(strlen(x)==1 && *x == '.')
@@ -514,6 +516,7 @@ float ChrToFlt(char x){
         return x - 48;
 }
 
+//Transformación de ceros negativos a positivos.
 void NotNegZero(Matriz *x){
     int i,j;
     for(i = 0; i < x->m; i++)
