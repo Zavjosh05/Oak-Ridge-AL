@@ -3,126 +3,101 @@
 //#include <ctype.h>
 #include <string.h>
 
+//Definición de la estructura Matriz
 typedef struct{
-    float **mtx;
-    int m;
-    int n;
+    float **mtx; //Puntero a un array 2D para almacenar los elementos de la matriz
+    int m; //Número de filas de la matriz
+    int n; //Número de columnas de la matriz
 } Matriz;
+//Prototipos de las funciones
+void initMatrix(Matriz *); //Se inicializa la matriz
+void consMtx(Matriz *, int, int); //Construye la matriz
+void destMtx(Matriz *); //Destruye la matriz
+void fill(Matriz); //Llena la matriz con valores ingresados por el usuario
+void imp(Matriz); //Imprime/despliega la matriz
+void fillZero(Matriz); //Llena la matriz de ceros
+void fillRand(Matriz); //Llena la matriz con datos aleatorios
+void mtxIn(Matriz, Matriz *); //Crea la matiz identidad
+int mtxInv(Matriz, Matriz *); //Calcula la inversa de la matriz
+void swap(Matriz, int, int); //Intercambia dos filas de la matriz
+void mult(Matriz, Matriz, Matriz); //Multiplica dos matrices
+void comp(Matriz, Matriz); //Compara dos matrices
+void copy(Matriz, Matriz *); //Copia una matriz a otra 
+void OrMtx(int*, int*); //Asigna el orden de la matriz
+int isdigitJ(char); //Verifica si un carácter es un dígito
+int verDim(char*,char*); //Verifica las dimensiones de la matriz
+int verInt(char*); //Verifica si una cadena de caracteres es un número entero
+int StrToInt(char*); //Convierte una cadena de caracteres a un número entero
+int ChrToInt(char); //Convierte un carácter a un número entero 
+int powJ(int,int); //Calcula la potencia de número
+int verFltJ(char*); //Verifica si una cadena de caractres es un número flotante
+int verSign(char*); //Verifica el signo de un número
+int isFloat(char*); //Verifica si una cadena de caracteres es un número flotante
+int CountDot(char*); //Cuenta el número de puntos en una cadena de caracteres
+int checkFloat(char); //Verifica si un carácter es un número flotante
+float StrToFlt(char*); //Convierte una cadena de caracteres a un número flotante
+float ChrToFlt(char); //Convierte un carácter a un número flotante
+void NotNegZero(Matriz*); //Cambia los -0 en la matriz a 0
+void Menu(Matriz*,int,int); //Muestra un menú para llenar la matriz
 
-void initMatrix(Matriz *);
-void consMtx(Matriz *, int, int);
-void destMtx(Matriz *);
-void fill(Matriz);
-void imp(Matriz);
-void fillZero(Matriz);
-void fillRand(Matriz);
-void mtxIn(Matriz, Matriz *);
-int mtxInv(Matriz, Matriz *);
-void swap(Matriz, int, int);
-void mult(Matriz, Matriz, Matriz);
-void comp(Matriz, Matriz);
-void copy(Matriz, Matriz *);
-void OrMtx(int*, int*);
-int isdigitJ(char);
-int verDim(char*,char*);
-int verInt(char*);
-int StrToInt(char*);
-int ChrToInt(char);
-int powJ(int,int);
-int verFltJ(char*);
-int verSign(char*);
-int isFloat(char*);
-int CountDot(char*);
-int checkFloat(char);
-float StrToFlt(char*);
-float ChrToFlt(char);
-void NotNegZero(Matriz*);
-void Menu(Matriz*,int,int);
-
-
+//Función principal
 int main(int argc, char **argv){
-    int m, n, ret;
-    Matriz a, b;
-    OrMtx(&m,&n);
-    printf("m = %d, n = %d\n",m,n);
-    consMtx(&a, m, n);
+    int m, n, ret; //Se declaran las variables
+    Matriz a, b; //Se declaran las matrices
+    OrMtx(&m,&n); //Asignamos el orden de las matrices
+    printf("m = %d, n = %d\n",m,n); //Impresión de las dimensiones de la matriz
+    consMtx(&a, m, n); //Construye la matriz
 
-    ret = mtxInv(a, &b);
-    NotNegZero(&b);
-    if(ret == 1){
-        imp(b);
+    ret = mtxInv(a, &b); //Calcula la inversa de la matriz
+    NotNegZero(&b); //Cambia los -0 a 0 en la matriz
+    if(ret == 1){ //Si la matriz es invertible
+        imp(b); //se imprime la matriz
         puts("===========================");
-        comp(a, b);
-    }else if(ret == 0){
+        comp(a, b); //Compara las matrices
+    }else if(ret == 0){ //Si la matriz no es invertible
         printf("La matriz es no inversible. \n");
     }
 
-    destMtx(&a);
-    return 0;
+    destMtx(&a); //Se libera la memoria destruyendo la matriz
+    return 0; //Se termina la ejecución
 }
-
-//construcción de Matriz
+//Construcción de Matriz
 void consMtx(Matriz *a, int m, int n){
-    char c;
+    char c; //Se declaran las variables
     int d = 1;
 
-    a->m = m;
-    (*a).n = n;
+    a->m = m; //Se asigna un número de filas
+    (*a).n = n; //Se asigna el número de columnas 
     
-    initMatrix(a);
-    Menu(a,m,n);
-    /*
-    puts("Menu :v");
-    puts("Deseas Llenar la matriz manualmente o generar sus datos aleatoreamente?");
-    puts("1. Llenar manualmente");
-    puts("2. Generar datos");
-    while(d==1){
-        scanf("%s", &c);
-        switch(c){
-            case '1':
-                printf("Llena la matriz %d x %d: \n", m, n);
-                fill(*a);
-                d = 0;
-                break;
-            case '2':
-                fillRand(*a);
-                d = 0;
-                break;
-            default:
-                puts("Opción no existente\n");
-                d = 1;
-                fflush(stdin);
-                break;
-                //consMtx(a,m,n);
-        }
-    }*/
-    puts("==========");
-    imp(*a);
+    initMatrix(a); //Inicialización de la matriz
+    Menu(a,m,n); //Menú para llenado de matriz
+    puts("=========="); 
+    imp(*a); //Se imprime la matriz
     puts("==========");
 }
-
+//Menú que se muestra para llenar la matriz 
 void Menu(Matriz *a, int m, int n)
 {
     int d=1;
     char c;
 
     while(d==1){
-        puts("Menu :v");
-        puts("Deseas Llenar la matriz manualmente o generar sus datos aleatoreamente?");
+        puts("Menu");
+        puts("Desea llenar la matriz manualmente o generar sus datos aleatoreamente?");
         puts("1. Llenar manualmente");
         puts("2. Generar datos");
         fseek(stdin,0,SEEK_END);
         c = getchar();
         switch(c){
-            case '1':
-                printf("Llena la matriz %d x %d: \n", m, n);
-                fill(*a);
+            case '1': //En caso de que la opción sea 1
+                printf("Llene la matriz %d x %d: \n", m, n);
+                fill(*a); //Se llena la matriz con valores ingresados por el usuario
                 d = 0;
-                break;
-            case '2':
-                fillRand(*a);
+                break; //Se termina el proceso
+            case '2': //En caso de que la opción sea 2
+                fillRand(*a); //Llena la matriz con valores aleatorios
                 d = 0;
-                break;
+                break; //Se termina el proceso
             default:
                 puts("Opción no existente\n\n");
                 fflush(stdin);
@@ -130,121 +105,109 @@ void Menu(Matriz *a, int m, int n)
         }
     }
 }
-
-//inicializacion de matriz
+//Inicializacion de matriz
 void initMatrix(Matriz *x){
-    x->mtx = malloc(x->m * sizeof(float *));
+    x->mtx = malloc(x->m * sizeof(float *)); //Asigna memoria para las filas de la matriz
     for(int i=0; i < x->m; i++)
-        x->mtx[i] = malloc(x->n * sizeof(float));
+        x->mtx[i] = malloc(x->n * sizeof(float)); //Asigna memoria para las columnas de la matriz
 }
-
-//liberacion de matriz
+//Liberacion de matriz
 void destMtx(Matriz *a){
     int i;
     for(i = 0; i<(*a).m; i++)
-        free((*a).mtx[i]);
-    free((*a).mtx);
-    (*a).mtx = NULL;
+        free((*a).mtx[i]); //Libera la memoria asignada a cada fila de la matriz
+    free((*a).mtx); //Libera la memoria asignada al array de punteros
+    (*a).mtx = NULL; //Asigna NULL al puntero para evitar referencias a memoria liberada
 }
-
-//impresion de matriz
+//Impresion de matriz
 void imp(Matriz a){
     int i, j;
     for(i=0; i<a.m; i++){
         printf("| ");
         for(j=0; j<a.n; j++){
-            printf("%.2f ", a.mtx[i][j]);
+            printf("%.2f ", a.mtx[i][j]); //Imprime cada elemento de la matriz
         }
         printf(" | \n");
     }
 }
-
-//llenado de matriz
+//Llenado de matriz
 void fill(Matriz a){
     int i, j;
     char x[100];
     for(i=0; i<a.m; i++){
         for(j=0; j<a.n; j++){
             printf("[A]%dx%d = ",i+1,j+1);
-            scanf("%s", x);
-            //
-            if(verFltJ(x))
-            {
-                a.mtx[i][j] = StrToFlt(x);
+            scanf("%s", x); //Lee el valor ingresado por el usuario
+            if(verFltJ(x)){ //Verifica si el valor ingresado es un número flotante válido
+                a.mtx[i][j] = StrToFlt(x); //Convierte la cadena de caracteres a un número flotante y lo asigna a la matriz
                 printf("[a]%dx%d = %.2f\n\n",i+1,j+1,a.mtx[i][j]);
-            }
-            else
-            {
+            }else{
                 puts("(!) Ingrese un flotante valido (!)");
-                j--;
+                j--; //Si el valor no es válido, se repite la iteración para el mismo elemento de la matriz
             }
         }
     }
 }
-
-//inicializacion de matriz con 0
+//Inicializacion de matriz con 0
 void fillZero(Matriz a){
     int i, j;
     for(i=0; i<a.m; i++){
         for(j=0; j<a.n; j++){
-            a.mtx[i][j] = 0;
+            a.mtx[i][j] = 0; //Asigna el valor 0 a cada elemento de la matriz
         }
     }
 }
-
 //Llenado aleatorio de matriz
 void fillRand(Matriz a){
     int i, j, ranInt;
     for(i=0; i<a.m; i++)
         for(j=0; j<a.n; j++){
-            ranInt = rand()%2;
+            ranInt = rand()%2; //Genera un número aleatorio entre 0 y 1
             if (ranInt == 0)
-                a.mtx[i][j] = rand()*(-10);
+                a.mtx[i][j] = rand()*(-10); //Si el número aleatorio es 0, asigna un número aleatorio negativo a la matriz
             else
-                a.mtx[i][j] = rand()*50;
+                a.mtx[i][j] = rand()*50; //Si el número aleatorio es 1, asigna un número aleatorio positivo a la matriz
         }
 }
-
 //Construccion de matriz identidad
 void mtxIn(Matriz a, Matriz *b){
-    if(a.m == a.n){
-        b->m = a.m;
-        b->n = a.m;
-        initMatrix(b);
+    if(a.m == a.n){ //Verifica si la matriz es cuadrada
+        b->m = a.m; //Asigna el número de filas de la matriz original a la matriz identidad
+        b->n = a.m; //Asigna el número de columnas de la matriz original a la matriz identidad
+        initMatrix(b); //Inicializa la matriz identidad
         int i, j;
-        for(i = 0; i < b->m; i++){
-            for(j=0; j < b->n; j++){
-                if(i == j){
-                    b->mtx[i][j] = 1;
+        for(i = 0; i < b->m; i++){ //Recorre las filas de la matriz identidad
+            for(j=0; j < b->n; j++){ //Recorre las columnas de la matriz identidad
+                if(i == j){ //Si la fila es igual a la columna (diagonal principal)
+                    b->mtx[i][j] = 1; //Asigna el valor 1 a la posición [i][j] de la matriz identidad 
                 }else{
-                    b->mtx[i][j] = 0;
+                    b->mtx[i][j] = 0; //Asigna el valor 0 a la posición [i][j] de la matriz identidad 
                 }
             }
         }
     }else{
-        printf("(!) Esta funcion requiere una matriz cuadrada \n");
+        printf("(!) Esta funcion requiere una matriz cuadrada \n"); //Imprime un mensaje de error si la matriz no es cuadrada
     }
 }
-
-//intercambio de filas
+//Intercambio de filas
 void swap(Matriz a, int i, int j){
-    float *aux = a.mtx[i];
-    a.mtx[i] = a.mtx[j];
-    a.mtx[j] = aux;
+    float *aux = a.mtx[i]; //Guarda la dirección de memoria de la fila i en aux
+    a.mtx[i] = a.mtx[j]; //Asigna la dirección de memoria de la fila j a la fila i
+    a.mtx[j] = aux; //Asigna la dirección de memoria guardada en aux (fila i original) a la fila j
 }
-
+//Multiplicación de matrices
 void mult(Matriz a, Matriz b, Matriz c){
-    if(a.n == b.m){
+    if(a.n == b.m){ //Verifica si el número de columnas de la matriz a es igual al número de filas de la matriz b
         int i, j, k;
-        fillZero(c);
-        if(c.m != a.m || c.n != b.m){
+        fillZero(c); //Llena la matriz c con ceros 
+        if(c.m != a.m || c.n != b.m){ //Si las dimensiones de la matriz c no son correctas, las ajusta
             c.m = a.m;
             c.n = b.n;
         }
-        for(i=0; i<b.n; i++){
-            for(j=0; j<a.m; j++){
-                for(k=0; k<a.n; k++){
-                    c.mtx[j][i] += (a.mtx[j][k])*(b.mtx[k][i]);
+        for(i=0; i<b.n; i++){ //Recorre las columnas de la matriz b
+            for(j=0; j<a.m; j++){ //Recorre las filas de la matriz a
+                for(k=0; k<a.n; k++){ //Recorre las columnas de la matriz a
+                    c.mtx[j][i] += (a.mtx[j][k])*(b.mtx[k][i]); //Realiza la multiplicación de matrices y acumula el resultado en la matriz c
                 }
             }
         }
@@ -252,27 +215,27 @@ void mult(Matriz a, Matriz b, Matriz c){
         printf("(!) El numero de columnas de la primera matriz debe de ser igual al numero de filas de la segunda matriz.");
     }
 }
-
+//Comparación de matrices
 void comp(Matriz a, Matriz b){
     Matriz c;
     c.m = a.m;
     c.n = a.n;
-    initMatrix(&c);
-    mult(a, b, c);
+    initMatrix(&c); //Inicializa la matriz c
+    mult(a, b, c); //Multiplica las matrices a y b, guardando el resultado en la matriz c
     printf("A(A^-1) = \n");
-    imp(c);
+    imp(c); //Imprime la mariz c 
     puts("***************************");
-    mult(b, a, c);
+    mult(b, a, c); //Multiplica las matrices b y a, y guarda el resultado en c
     printf("(A^-1)A = \n");
-    imp(c);
+    imp(c); //Imprime la matriz c
 }
-
+//Copia de matriz
 void copy(Matriz orgnal, Matriz *cpy){
-    if(orgnal.m == cpy->m && orgnal.n == cpy->n){
+    if(orgnal.m == cpy->m && orgnal.n == cpy->n){ //Verifica si las dimensiones de las matrices son iguales
         int i, j;
-        for(i = 0; i < orgnal.m; i++){
-            for(j = 0; j < orgnal.n; j++){
-                cpy->mtx[i][j] = orgnal.mtx[i][j];
+        for(i = 0; i < orgnal.m; i++){ //Recorre las filas 
+            for(j = 0; j < orgnal.n; j++){ //Recorre las columnas
+                cpy->mtx[i][j] = orgnal.mtx[i][j]; //Copia cada elemento de la matriz original a la matriz copia
             }
         }
 
@@ -280,15 +243,15 @@ void copy(Matriz orgnal, Matriz *cpy){
         printf("La matriz destino tiene que ser del mismo tamaño. \n");
     }
 }
-
+//Cálculo de la inversa de la matriz
 int mtxInv(Matriz aOr, Matriz *aInv){
-    if(aOr.m == aOr.n){
+    if(aOr.m == aOr.n){ //Verifica si la matriz es cuadrada
         int i, j, k, flg = 0, simp = 0;
         float x, y;
         Matriz a; a.m = aOr.m; a.n = aOr.n;
-        initMatrix(&a);
-        copy(aOr, &a);
-        mtxIn(a, aInv);
+        initMatrix(&a); //Inicializa la matriz a
+        copy(aOr, &a); //Copia la matriz original a la matriz a 
+        mtxIn(a, aInv); //Crea una matriz identidad del mismo tamaño que a y la guarda en aInv
 
         if(a.mtx[0][0] == 0){
             for(i=1; i<a.m; i++){
@@ -346,8 +309,7 @@ int mtxInv(Matriz aOr, Matriz *aInv){
 }
 
 //Asignación del orden de la matriz
-void OrMtx(int *m, int *n)
-{
+void OrMtx(int *m, int *n){
     char ms[5], ns[5];
 
     puts("Ingrese las dimensiones de la matriz\n");
@@ -358,8 +320,7 @@ void OrMtx(int *m, int *n)
     scanf("%s", ns);
     putchar('\n');
 
-    if(verDim(ms,ns))
-    {
+    if(verDim(ms,ns)){
         *m = StrToInt(ms);
         *n = StrToInt(ns);
 
