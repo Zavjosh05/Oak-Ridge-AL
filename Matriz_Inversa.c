@@ -162,7 +162,7 @@ void fillRand(Matriz a){
     int i, j, ranInt;
     for(i=0; i<a.m; i++)
         for(j=0; j<a.n; j++){
-            ranInt = rand()%2; //Genera un número aleatorio entre 0 y 1
+            ranInt = rand()%2; //Genera un número aleatorio, 0 o 1
             if (ranInt == 0)
                 a.mtx[i][j] = rand()*(-10); //Si el número aleatorio es 0, asigna un número aleatorio negativo a la matriz
             else
@@ -189,8 +189,8 @@ void mtxIn(Matriz a, Matriz *b){
         printf("(!) Esta funcion requiere una matriz cuadrada \n"); //Imprime un mensaje de error si la matriz no es cuadrada
     }
 }
-//Intercambio de filas
-void swap(Matriz a, int i, int j){
+
+void swap(Matriz a, int i, int j){ //Intercambio de filas
     float *aux = a.mtx[i]; //Guarda la dirección de memoria de la fila i en aux
     a.mtx[i] = a.mtx[j]; //Asigna la dirección de memoria de la fila j a la fila i
     a.mtx[j] = aux; //Asigna la dirección de memoria guardada en aux (fila i original) a la fila j
@@ -238,7 +238,6 @@ void copy(Matriz orgnal, Matriz *cpy){
                 cpy->mtx[i][j] = orgnal.mtx[i][j]; //Copia cada elemento de la matriz original a la matriz copia
             }
         }
-
     }else{
         printf("La matriz destino tiene que ser del mismo tamaño. \n");
     }
@@ -252,7 +251,6 @@ int mtxInv(Matriz aOr, Matriz *aInv){
         initMatrix(&a); //Inicializa la matriz a
         copy(aOr, &a); //Copia la matriz original a la matriz a 
         mtxIn(a, aInv); //Crea una matriz identidad del mismo tamaño que a y la guarda en aInv
-
         if(a.mtx[0][0] == 0){
             for(i=1; i<a.m; i++){
                 if(a.mtx[i][0] != 0){
@@ -279,7 +277,6 @@ int mtxInv(Matriz aOr, Matriz *aInv){
                                 simp = 1;
                             }
                         }
-
                         a.mtx[j][k] = a.mtx[j][k] - y*a.mtx[i][k];
                         aInv->mtx[j][k] = aInv->mtx[j][k] - y*aInv->mtx[i][k];
 
@@ -290,7 +287,6 @@ int mtxInv(Matriz aOr, Matriz *aInv){
                 }else{
                     flg = 1;
                 }
-
                 if(!flg){
                     return 0;
                 }else{
@@ -299,7 +295,6 @@ int mtxInv(Matriz aOr, Matriz *aInv){
             }
             simp = 0;
         }
-
         destMtx(&a);
         return 1;
     }else{
@@ -311,7 +306,6 @@ int mtxInv(Matriz aOr, Matriz *aInv){
 //Asignación del orden de la matriz
 void OrMtx(int *m, int *n){
     char ms[5], ns[5];
-
     puts("Ingrese las dimensiones de la matriz\n");
     printf("m = ");
     scanf("%s", ms);
@@ -319,37 +313,32 @@ void OrMtx(int *m, int *n){
     printf("n = ");
     scanf("%s", ns);
     putchar('\n');
-
     if(verDim(ms,ns)){
         *m = StrToInt(ms);
         *n = StrToInt(ns);
 
         if(*m == *n)
             printf("Orden de la matriz: %d\n",*m);
-        else
-            {
+        else{
                 puts("\n(!) La matriz debe de ser cuadrada (!)");
                 OrMtx(m,n);
             }
         
-    }else
-        {
+    }else{
             puts("\n(!) Inserte enteros positivos validos (!)\n");
             OrMtx(m,n);
         }
 }
 
 //funcion que verifica si los numeros si son numeros :v
-int verDim(char *m, char *n)
-{
+int verDim(char *m, char *n){
     if(verInt(m)&&verInt(n))
         return 1;
     else
         return 0;
 }
 
-int isdigitJ(char x)
-{
+int isdigitJ(char x){
     if(x >= '0'  && x <= '9')
         return 1;
     else
@@ -357,66 +346,49 @@ int isdigitJ(char x)
 }
 
 //predicado para verificar si la cadena de caracteres solo contiene nums :v
-int verInt(char *x)
-{
+int verInt(char *x){
     int i;
-
     for(i = 0; i < strlen(x); i++)
         if(!isdigitJ(*(x+i)))
             return 0;
-    
     return 1;
 }
 
 int ChrToInt(char c){return c - '0';}
 
-int powJ(int b, int e)
-{
+int powJ(int b, int e){
     int n;
-
     if(e == 0)
         return 1;
-
     for(n = 1; e > 0; e--)
         n  *= b;
-
     return n;
 }
 
-int StrToInt(char *ch)
-{
+int StrToInt(char *ch){
     int i,j, res = 0;
-
     for(i = strlen(ch)-1, j = 0; i >= 0; i--,j++)
         res += ChrToInt(*(ch+j))*powJ(10,i);
-
     return res;
 }
 
-int verFltJ(char *fl)
-{
+int verFltJ(char *fl){
     int ver = verSign(fl);
-
     if(ver)
-        if(ver == 1)
-        {
+        if(ver == 1){
             if(isFloat(fl+1))
                 return 1;
             else return 0;
         }
-        else
-        {
+        else{
             if(isFloat(fl))
                 return 1;
             else return 0;
         }
-
     else return 0;
-
 }
 
-int verSign(char *fl)
-{
+int verSign(char *fl){
     if(*fl == '-')
         return 1;
     else if(*fl == '.' || isdigitJ(*fl))
@@ -424,35 +396,26 @@ int verSign(char *fl)
         else return 0;
 }
 
-int isFloat(char *x)
-{
+int isFloat(char *x){
     int i;
-
     if(strlen(x)==1 && *x == '.')
         return 0;
-    else
-    {
-        if(CountDot(x) == 0 || CountDot(x) == 1)
-        {
-        for(i = 0; i < strlen(x); i++)
-        {
-            if(!checkFloat(*(x + i)))
-                return 0;
-        }
-        return 1;
+    else{
+        if(CountDot(x) == 0 || CountDot(x) == 1) {
+            for(i = 0; i < strlen(x); i++){
+                if(!checkFloat(*(x + i)))
+                    return 0;
+            }
+            return 1;
         }
         else 
             return 0;
     }
-    
 }
 
-int CountDot(char *x)
-{
+int CountDot(char *x){
     int count = 0,i;
-
-    for(i = 0; i < strlen(x); i ++)
-    {
+    for(i = 0; i < strlen(x); i ++){
         if(*(x + i) == '.')
             count++;
     }
@@ -460,27 +423,22 @@ int CountDot(char *x)
     return count;
 }
 
-int checkFloat(char x)
-{
+int checkFloat(char x){
     if(isdigitJ(x) || x == '.')
         return 1;
     else
         return 0;
 }
 
-float powJFlt(float b, int e)
-{
+float powJFlt(float b, int e){
     int i;
-    float res = 1;
-    
-    if(e >= 0)
-    {
+    float res = 1; 
+    if(e >= 0){
         for(i = 1; i <= e; i++)
             res *= b;
         return res;
     }
-    else
-    {
+    else{
         e *= -1;
         for(i = 0; i < e; i++)
             res *= b;
@@ -488,102 +446,76 @@ float powJFlt(float b, int e)
     }
 }
 
-int DotLoc(char *x)
-{
+int DotLoc(char *x){
     int i, count = 0;
-
-    for(i = 0; i < strlen(x); i++)
-    {
+    for(i = 0; i < strlen(x); i++){
         if(*(x + i) == '.')
             return count;
         else count++;
     }
-
     return -1;
 }
 
-float StrToFlt(char *x)
-{
+float StrToFlt(char *x){
     int i,j, dotcount;
     float res = 0;
-
     dotcount = DotLoc(x);
-
-    if(dotcount == -1)
-    {
-        if(*x == '-')
-        {
+    if(dotcount == -1){
+        if(*x == '-'){
             x += 1;
-
             for(i = strlen(x)-1, j = 0; i >= 0; i--,j++)
                 res += ChrToFlt(*(x+j))*powJFlt(10,i);
             res = -res;
         }
-        else
-        {
+        else{
             for(i = strlen(x)-1, j = 0; i >= 0; i--,j++)
                 res += ChrToFlt(*(x+j))*powJFlt(10,i);
         }
     }
-    else if(dotcount == 0)
-        {
+    else if(dotcount == 0){
             x += 1;
-
             for(i = -strlen(x), j = 0; i <= 0; i++, j++)
             res += ChrToFlt(*(x+j))*powJFlt(10,i);
         }
-        else if(dotcount == 1)
-            {
-                if(*x == '-')
-                {
+        else if(dotcount == 1) {
+                if(*x == '-'){
                     for(i = -1, j=2; j < strlen(x); i--,j++)
                         res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
                     res = -res;
                 }
-                else
-                {
+                else{
                     for(i = dotcount-1, j = 0; i >= 0; i--, j++)
                         res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
                     for(i = -1, j=dotcount+1; j < strlen(x); i--,j++)
                         res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
                 }
             }
-            else
-            {
-                if(*x == '-')
-                {
+            else{
+                if(*x == '-'){
                     x += 1;
-
                     for(i = dotcount, j = 0; i >= 0; i--, j++)
                         res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
                     for(i = -1, j=dotcount; j < strlen(x); i--,j++)
                         res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
-
                     res = -res;
                 }
-                else
-                {
+                else{
                     for(i = dotcount-1, j = 0; i >= 0; i--, j++)
                         res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
                     for(i = -1, j=dotcount+1; j < strlen(x); i--,j++)
                         res =+ ChrToFlt(*(x+j))*powJFlt(10,i);
                 }
-                
             }
-
     return res;
 }
 
-float ChrToFlt(char x)
-{
+float ChrToFlt(char x){
     if(x >= '0' && x<= '9')
         return x - 48;
 }
 
-void NotNegZero(Matriz *x)
-{
+void NotNegZero(Matriz *x){
     int i,j;
-
     for(i = 0; i < x->m; i++)
         for(j = 0; j < x->n; j++)
             if(x->mtx[i][j] == -0)
