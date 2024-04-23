@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-//#include <ctype.h>
 #include <string.h>
 #include <Time.h>
 
@@ -12,7 +11,7 @@ typedef struct{
 } Matriz;
 //Prototipos de las funciones
 void initMatrix(Matriz *); //Se inicializa la matriz
-void consMtx(Matriz *, int, int); //Construye la matriz
+void consMtx(Matriz *, Matriz *, int, int); //Construye la matriz
 void destMtx(Matriz *); //Destruye la matriz
 void fill(Matriz); //Llena la matriz con valores ingresados por el usuario
 void imp(Matriz); //Imprime/despliega la matriz
@@ -49,23 +48,13 @@ int main(int argc, char **argv){
     Matriz a, b; //Se declaran las matrices
     OrMtx(&m,&n); //Asignamos el orden de las matrices
     printf("m = %d, n = %d\n",m,n); //Impresión de las dimensiones de la matriz
-    consMtx(&a, m, n); //Construye la matriz
+    consMtx(&a, &b, m, n); //Construye la matriz
 
-    ret = mtxInv(a, &b); //Calcula la inversa de la matriz
-    NotNegZero(&b); //Cambia los -0 a 0 en la matriz
-    if(ret == 1){ //Si la matriz es invertible
-        imp(b); //se imprime la matriz
-        puts("===========================");
-        comp(a, b); //Compara las matrices
-    }else if(ret == 0){ //Si la matriz no es invertible
-        printf("La matriz es no inversible. \n");
-    }
-
-    destMtx(&a); //Se libera la memoria destruyendo la matriz
     return 0; //Se termina la ejecución
 }
 //Construcción de Matriz
-void consMtx(Matriz *a, int m, int n){
+void consMtx(Matriz *a, Matriz *b, int m, int n){
+    int ret;
     char c; //Se declaran las variables
 
     a->m = m; //Se asigna un número de filas
@@ -85,15 +74,27 @@ void consMtx(Matriz *a, int m, int n){
     c = getchar();
     switch(c){
         case '1': //En caso de que la opción sea 1
+            ret = mtxInv(*a, b);
+            puts("===========================");
+                NotNegZero(b); //Cambia los -0 a 0 en la matriz
+                if(ret == 1){ //Si la matriz es invertible
+                    imp(*b); //se imprime la matriz
+                    puts("===========================");
+                    comp(*a, *b); //Compara las matrices
+                }else if(ret == 0){ //Si la matriz no es invertible
+                    printf("La matriz es no inversible. \n");
+                }
+
+                destMtx(a); //Se libera la memoria destruyendo la matriz
             break;
         case '2': //En caso de que la opción sea 2
-            destMtx(a);
-            consMtx(&a,m,n);
+            destMtx(a); //Destruye la matriz que se habia creado y da lugar a una nueva
+            consMtx(a,b,m,n); //Construye otra matriz
             break;
         case '3':
-            destMtx(a);
-            OrMtx(&m,&n);
-            consMtx(&a,m,n);
+            destMtx(a); //Destruye la matriz que se habia creado y da lugar a una nueva
+            OrMtx(&m,&n); //Vuelve a pedir el orden de la matriz
+            consMtx(a,b,m,n); //Construye otra matriz
             break; //Se termina el proceso
         case '4':
             destMtx(a);
@@ -360,17 +361,22 @@ void OrMtx(int *m, int *n){
     scanf("%s", ns); //Lee el número de columnas de la matriz
     putchar('\n');
     //Verifica si las dimensiones ingresadas son números enteros válidos
-    if(verDim(ms,ns)){
+    if(verDim(ms,ns)) {
         *m = StrToInt(ms); //Convierte la cadena de caracteres a un número entero para el número de filas
         *n = StrToInt(ns); //Convierte la cadena de caracteres a un número entero para el número de columnas
         //Verifica si la matriz es cuadrada (que el número de filas sea igual al número de columnas)
-        if(*m == *n)
-            printf("Orden de la matriz: %d\n",*m); //Imprime el orden de la matriz si es cuadrada
-        else{
+        if((*m > 1) && (*n > 1)) { //Verifica que la matriz tenga dimensiones validas
+            if(*m == *n) //Verifica que las dimensiones sean iguales
+                printf("Orden de la matriz: %d\n",*m); //Imprime el orden de la matriz si es cuadrada
+            else{
                 puts("\n(!) La matriz debe de ser cuadrada (!)"); //Imprime un mensaje de error si la matriz no es cuadrada
                 OrMtx(m,n); //Llama a la función de nuevo para solicitar dimensiones válidas
             }
-        
+
+        } else {
+            puts("\n(!) Una matriz de 1x1 no es una matriz valida >:v (!)");
+            OrMtx(m,n); //Llama a la función de nuevo para solicitar dimensiones válidas
+        }
     }else{
             puts("\n(!) Inserte enteros positivos validos (!)\n"); //Imprime un mensaje de error si las dimensiones ingresadas no son números enteros válidos
             OrMtx(m,n); //Llama a la función de nuevo para solicitar dimensiones válidas
