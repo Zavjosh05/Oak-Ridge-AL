@@ -29,14 +29,15 @@ int verDim(char*,char*); //Verifica las dimensiones de la matriz
 int verInt(char*); //Verifica si una cadena de caracteres es un número entero
 int StrToInt(char*); //Convierte una cadena de caracteres a un número entero
 int ChrToInt(char); //Convierte un carácter a un número entero 
-int powJ(int,int); //Calcula la potencia de número
+int powJ(int,int); //Calcula la potencia de número entero
 int verFltJ(char*); //Verifica si una cadena de caractres es un número flotante
 int verSign(char*); //Verifica el signo de un número
 int isFloat(char*); //Verifica si una cadena de caracteres es un número flotante
 int CountDot(char*); //Cuenta el número de puntos en una cadena de caracteres
-int checkFloat(char); //Verifica si un carácter es un número flotante
+int checkFloat(char); //Verifica si un carácter es un dígito o es un punto.
 float StrToFlt(char*); //Convierte una cadena de caracteres a un número flotante
 float ChrToFlt(char); //Convierte un carácter a un número flotante
+float powJFlt(float, int); //Calcula la potencia de un número flotante
 void NotNegZero(Matriz*); //Cambia los -0 en la matriz a 0
 void Menu(Matriz*,int,int); //Muestra un menú para llenar la matriz
 
@@ -353,7 +354,7 @@ int verInt(char *x){
 }
 //Convierte un carácter a un número entero
 int ChrToInt(char c){return c - '0';}
-//Calcula la potencia de un número
+//Calcula la potencia de un número entero
 int powJ(int b, int e){
     int n;
     if(e == 0) //Si el exponente es 0
@@ -371,9 +372,9 @@ int StrToInt(char *ch){
 }
 //Verifica si una cadena de caracteres es un número flotante
 int verFltJ(char *fl){
-    int ver = verSign(fl);
+    int ver = verSign(fl); //Verifica que el primer caracter de la cadena sea valido.
     if(ver)
-        if(ver == 1){
+        if(ver == 1){ //Si el primer caracter es valido.
             if(isFloat(fl+1)) //Si la cadena sin el signo es un flotante
                 return 1; //Regresa verdadero
             else return 0; //Regresa falso
@@ -401,7 +402,7 @@ int isFloat(char *x){
     else{
         if(CountDot(x) == 0 || CountDot(x) == 1) { //Si la cadena no contiene puntos o solo contiene un punto
             for(i = 0; i < strlen(x); i++){ //Recorre cada carácter de la cadena
-                if(!checkFloat(*(x + i))) //Si el carácter no es un dígito ni un punto
+                if(!(*(x + i))) //Si el carácter no es un dígito ni un punto
                     return 0; //Regresa falso
             }
             return 1; //Regresa verdadero 
@@ -419,38 +420,41 @@ int CountDot(char *x){
     }
     return count; //Regresa el contador
 }
-//Verifica si un carácter es un número flotante
+
+//Verifica si un carácter es un dígito o un punto
 int checkFloat(char x){
-    if(isdigitJ(x) || x == '.') //Si el carácter es un dígitoo un punto
+    if(isdigitJ(x) || x == '.') //Si el carácter es un dígito o un punto
         return 1; //Regresa verdadero
     else
         return 0; //Regresa falso
 }
 
+//Calcula la potencia de un numero flotante
 float powJFlt(float b, int e){
     int i;
     float res = 1; 
-    if(e >= 0){
-        for(i = 1; i <= e; i++)
-            res *= b;
-        return res;
+    if(e >= 0){ //Verifica que la potencia a la que se elevará sea mayor o igual a cero.
+        for(i = 1; i <= e; i++) //Itera desde 1 hasta la potencia a elevar
+            res *= b; //Multiplica el flotante base por si mismo
+        return res; //Regresa el resultado
     }
     else{
-        e *= -1;
-        for(i = 0; i < e; i++)
-            res *= b;
-        return 1/res;
+        e *= -1; //Si la potencia es negativa, entonces la vuelve positiva.
+        for(i = 0; i < e; i++) //Itera desde 1 hasta la potencia a elevar
+            res *= b; //Multiplica el flotante base por si mismo
+        return 1/res; //Regresa el resultado
     }
 }
 
+//Encuentra la posición del punto decimal dentro de una cadena de caracteres.
 int DotLoc(char *x){
     int i, count = 0;
-    for(i = 0; i < strlen(x); i++){
-        if(*(x + i) == '.')
-            return count;
-        else count++;
+    for(i = 0; i < strlen(x); i++){ //Itera sobre cada carácter de la cadena
+        if(*(x + i) == '.') //Si el contenido en la dirección de x+i es igual a un punto
+            return count; //Devuelve el valor de la posición donde se encuentra el punto.
+        else count++; //De no cumplirse, aumenta en uno el contador.
     }
-    return -1;
+    return -1; //Regresa el valor -1 en caso de no tener un punto en la cadena.
 }
 //Convierte una cadena de caracteres a un número flotante
 float StrToFlt(char *x){
