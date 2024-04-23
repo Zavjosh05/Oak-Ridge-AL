@@ -2,6 +2,7 @@
 #include <stdlib.h>
 //#include <ctype.h>
 #include <string.h>
+#include <Time.h>
 
 //Definición de la estructura Matriz
 typedef struct{
@@ -40,6 +41,7 @@ float ChrToFlt(char); //Convierte un carácter a un número flotante
 float powJFlt(float, int); //Calcula la potencia de un número flotante
 void NotNegZero(Matriz*); //Cambia los -0 en la matriz a 0
 void Menu(Matriz*,int,int); //Muestra un menú para llenar la matriz
+int camPiv(Matriz *, Matriz *, int);
 
 //Función principal
 int main(int argc, char **argv){
@@ -65,7 +67,6 @@ int main(int argc, char **argv){
 //Construcción de Matriz
 void consMtx(Matriz *a, int m, int n){
     char c; //Se declaran las variables
-    int d = 1;
 
     a->m = m; //Se asigna un número de filas
     (*a).n = n; //Se asigna el número de columnas 
@@ -75,6 +76,34 @@ void consMtx(Matriz *a, int m, int n){
     puts("=========="); 
     imp(*a); //Se imprime la matriz
     puts("==========");
+    puts("Como desea continuar?");
+    puts("1. Obtener la inversa");
+    puts("2. Volver a llenar");
+    puts("3. Construir otra matriz");
+    puts("4. Salir");
+    fseek(stdin,0,SEEK_END);
+    c = getchar();
+    switch(c){
+        case '1': //En caso de que la opción sea 1
+            break;
+        case '2': //En caso de que la opción sea 2
+            destMtx(a);
+            consMtx(&a,m,n);
+            break;
+        case '3':
+            destMtx(a);
+            OrMtx(&m,&n);
+            consMtx(&a,m,n);
+            break; //Se termina el proceso
+        case '4':
+            destMtx(a);
+            _Exit(-1);
+        default:
+            puts("Opción no existente\n\n");
+        fflush(stdin);
+        break;
+    }
+    fflush(stdin);
 }
 //Menú que se muestra para llenar la matriz 
 void Menu(Matriz *a, int m, int n)
@@ -87,6 +116,7 @@ void Menu(Matriz *a, int m, int n)
         puts("Desea llenar la matriz manualmente o generar sus datos aleatoreamente?");
         puts("1. Llenar manualmente");
         puts("2. Generar datos");
+        puts("3. Salir");
         fseek(stdin,0,SEEK_END);
         c = getchar();
         switch(c){
@@ -99,6 +129,9 @@ void Menu(Matriz *a, int m, int n)
                 fillRand(*a); //Llena la matriz con valores aleatorios
                 d = 0;
                 break; //Se termina el proceso
+            case '3':
+                destMtx(a);
+                _Exit(-1);
             default:
                 puts("Opción no existente\n\n");
                 fflush(stdin);
@@ -161,13 +194,14 @@ void fillZero(Matriz a){
 //Llenado aleatorio de matriz
 void fillRand(Matriz a){
     int i, j, ranInt;
+    srand(time(NULL)); //Cambia la semilla del generador de numeros aleatorios
     for(i=0; i<a.m; i++)
         for(j=0; j<a.n; j++){
             ranInt = rand()%2; //Genera un número aleatorio, 0 o 1
             if (ranInt == 0)
-                a.mtx[i][j] = rand()*(-10); //Si el número aleatorio es 0, asigna un número aleatorio negativo a la matriz
+                a.mtx[i][j] = (-1)*(rand()%11); //Si el número aleatorio es 0, asigna un número aleatorio negativo a la matriz entre 0 y 10
             else
-                a.mtx[i][j] = rand()*50; //Si el número aleatorio es 1, asigna un número aleatorio positivo a la matriz
+                a.mtx[i][j] = rand()%11; //Si el número aleatorio es 1, asigna un número aleatorio positivo a la matriz a la matriz entre 0 y 10
         }
 }
 //Construccion de matriz identidad
@@ -243,56 +277,68 @@ void copy(Matriz orgnal, Matriz *cpy){
         printf("La matriz destino tiene que ser del mismo tamaño. \n");
     }
 }
+
+//Revisar pivotes
+int camPiv(Matriz *a, Matriz *b, int p){
+    int i;
+    if(a->mtx[p][p] == 0){ //Cuando el primer elemento de la matriz a es 0
+        for(i=p+1; i<a->m; i++){ //recorre las filas de la matriz a
+            if(a->mtx[i][p] != 0){ //si encuentra una fila cuyo primer elemento no es 0
+                swap(*a, 0, i); //intercambia la fila i con la fila 0
+                swap(*b, 0, i); //Hace lo mismo con la matriz aInv
+                return 1; //Termina el proceso
+            }
+        }
+        if(i == a->m){ //Si todas las filas tienen 0 en la primera columna, la matriz no es invertible
+            return 0;
+        }
+    }
+    return 1;
+}
+
 //Cálculo de la inversa de la matriz
 int mtxInv(Matriz aOr, Matriz *aInv){
     if(aOr.m == aOr.n){ //Verifica si la matriz es cuadrada
-        int i, j, k, flg = 0, simp = 0;
+        int i, j, k, flg = 0, simp = 0, ctr = 0;
         float x, y;
         Matriz a; a.m = aOr.m; a.n = aOr.n;
         initMatrix(&a); //Inicializa la matriz a
         copy(aOr, &a); //Copia la matriz original a la matriz a 
         mtxIn(a, aInv); //Crea una matriz identidad del mismo tamaño que a y la guarda en aInv
-        if(a.mtx[0][0] == 0){ //Cuando el primer elemento de la matriz a es 0
-            for(i=1; i<a.m; i++){ //recorre las filas de la matriz a
-                if(a.mtx[i][0] != 0){ //si encuentra una fila cuyo primer elemento no es 0
-                    swap(a, 0, i); //intercambia la fila i con la fila 0
-                    swap(*aInv, 0, i); //Hace lo mismo con la matriz aInv
-                    break; //Termina el proceso
-                }
-            }
-            if(i == a.m){ //Si todas las filas tienen 0 en la primera columna, la matriz no es invertible 
-                return 0;
-            }
-        }
 
         for(i=0; i<a.m; i++){ //Recorre las filas de la matriz a
-            x = a.mtx[i][i]; //Guarda el elemento en la diagonal 
-            for(j=0; j<a.m; j++){ //Recorre las filas de la matriz a
-                y = a.mtx[j][i]; //Guarda el elemento en la columna i
-                if(i!=j){ //Si no estamos en la diagonal 
-                    for(k=0; k<a.m; k++){ //Recorre las columnas de la matriz a
-                        if(!simp && x != 1){ //Si el elemento en la diagonal no es 1, divide toda la fila por el elemento en la diagonal
-                            a.mtx[i][k] = a.mtx[i][k]/x; //Se divide la fila por el elemento en la diagonal
-                            aInv->mtx[i][k] = aInv->mtx[i][k]/x;
-                            if(k == a.m-1){
-                                simp = 1;
+            ctr = camPiv(&a, aInv, i);
+            x = a.mtx[i][i]; //Guarda el elemento en la diagonal
+            if(ctr) {
+                for(j=0; j<a.m; j++){ //Recorre las filas de la matriz a
+                    y = a.mtx[j][i]; //Guarda el elemento en la columna i
+                    if(i!=j){ //Si no estamos en la diagonal
+                        for(k=0; k<a.m; k++){ //Recorre las columnas de la matriz a
+                            if(!simp && x != 1){ //Si el elemento en la diagonal no es 1, divide toda la fila por el elemento en la diagonal
+                                a.mtx[i][k] = a.mtx[i][k]/x; //Se divide la fila por el elemento en la diagonal
+                                aInv->mtx[i][k] = aInv->mtx[i][k]/x;
+                                if(k == a.m-1){
+                                    simp = 1;
+                                }
+                            }
+                            a.mtx[j][k] = a.mtx[j][k] - y*a.mtx[i][k]; //Resta a la fila j la fila i multiplicada por y
+                            aInv->mtx[j][k] = aInv->mtx[j][k] - y*aInv->mtx[i][k]; //Hace lo mismo en la matriz aInv
+
+                            if(a.mtx[j][k] != 0){
+                                flg = 1;
                             }
                         }
-                        a.mtx[j][k] = a.mtx[j][k] - y*a.mtx[i][k]; //Resta a la fila j la fila i multiplicada por y
-                        aInv->mtx[j][k] = aInv->mtx[j][k] - y*aInv->mtx[i][k]; //Hace lo mismo en la matriz aInv
-
-                        if(a.mtx[j][k] != 0){
-                                flg = 1;
-                        }
+                    }else{
+                        flg = 1;
                     }
-                }else{
-                    flg = 1;
+                    if(!flg){ //Si una fila se convierte en 0, la matriz no es inversible
+                        return 0;
+                    }else{
+                        flg = 0;
+                    }
                 }
-                if(!flg){ //Si una fila se convierte en 0, la matriz no es inversible
-                    return 0;
-                }else{
-                    flg = 0;
-                }
+            }else {
+                return 0;
             }
             simp = 0;
         }
