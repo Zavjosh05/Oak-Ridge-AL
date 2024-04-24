@@ -40,7 +40,7 @@ float ChrToFlt(char); //Convierte un carácter a un número flotante
 float powJFlt(float, int); //Calcula la potencia de un número flotante
 void NotNegZero(Matriz*); //Cambia los -0 en la matriz a 0
 void Menu(Matriz*,int,int); //Muestra un menú para llenar la matriz
-int camPiv(Matriz *, Matriz *, int);
+int camPiv(Matriz *, Matriz *, int);//Revisar pivotes
 
 //Función principal
 int main(int argc, char **argv){
