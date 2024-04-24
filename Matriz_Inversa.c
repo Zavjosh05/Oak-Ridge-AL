@@ -374,7 +374,7 @@ void OrMtx(int *m, int *n){
             }
 
         } else {
-            puts("\n(!) Una matriz de 1x1 no es una matriz valida >:v (!)");
+            puts("\n(!) El orden de la matriz es invalido (!)");
             OrMtx(m,n); //Llama a la función de nuevo para solicitar dimensiones válidas
         }
     }else{
