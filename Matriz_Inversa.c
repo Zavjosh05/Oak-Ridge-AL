@@ -530,29 +530,32 @@ float StrToFlt(char *x){
         for(i = 1, j = 0; i <= strlen(x); i++, j++) //Itera sobre cada carácter de la cadena
             res += ChrToFlt(*(x+j))*powJFlt(10,-i);//Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
         }else if(dotcount == 1) { //Si el punto está en la segunda posición 
-                if(*x == '-'){ //Si el número es negativo
-                    for(i = -1, j=2; j < strlen(x); i--,j++) //Itera sobre cada carácter de la cadena, ignorando el signo negativo y el punto
-                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
+                if(*x == '-')
+                {
+                    //Si el número es negativo
+                    for(i = 1, j=2; i <= strlen(x)-2; i++,j++){ //Itera sobre cada carácter de la cadena, ignorando el signo negativo y el punto
+                        res += ChrToFlt(*(x+j))*powJFlt(10,-i);
+                } //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
                     res = -res; //Cambia el signo del resultado a negativo
                 }else{ //Si el número es positivo
                     for(i = dotcount-1, j = 0; i >= 0; i--, j++) //Itera sobre cada carácter de la cadena hasta el punto
-                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
+                        res += ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
                     for(i = -1, j=dotcount+1; j < strlen(x); i--,j++) //Itera sobre cada carácter de la cadena después del punto
-                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
+                        res += ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
                 }
             }else{ //Si el punto está en cualquier otra posición de la cadena
                 if(*x == '-'){ //Si el número es negativo
                     x += 1; //Avanza un carácter en la cadena para ignorar el signo negativo
                     for(i = dotcount, j = 0; i >= 0; i--, j++) //Itera sobre cada carácter de la cadena hasta el punto
-                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
+                        res += ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
                     for(i = -1, j=dotcount; j < strlen(x); i--,j++) //Itera sobre cada carácter de la cadena después del punto
-                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
+                        res += ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
                     res = -res; //Cambia el signo del resultado a negativo
                 }else{ //Si el número es positivo
                     for(i = dotcount-1, j = 0; i >= 0; i--, j++) //Itera sobre cada carácter de la cadena hasta el punto
-                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
+                        res += ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
                     for(i = -1, j=dotcount+1; j < strlen(x); i--,j++) //Itera sobre cada carácter de la cadena después del punto
-                        res =+ ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
+                        res += ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
                 }
             }
     return res; //Devuelve el resultado
