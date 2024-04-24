@@ -5,7 +5,7 @@ Martínez Granados Axel Eduardo
 Sanchez Garcia Claudia Emilia
 Sandoval Garcia Jose Alejandro
 Vega Cortez Jose Angel
-Zárate Lozano Luis Axel
+Zarate Lozano Luis Axel
 Zavaleta Guerrero Joshua Ivan
 */
 #include <stdio.h>
