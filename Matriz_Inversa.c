@@ -523,10 +523,12 @@ float StrToFlt(char *x){
             for(i = strlen(x)-1, j = 0; i >= 0; i--,j++) //Itera sobre cada carácter de la cadena
                 res += ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el caácter a flotante y lo multiplica por la potencia de 10 correspondiente
         }
-    }else if(dotcount == 0){ //Si el punto está al principio de la cadena
-            x += 1; //Avanza un carácter en la cadena para ignorar el punto
-            for(i = -strlen(x), j = 0; i <= 0; i++, j++) //Itera sobre cada carácter de la cadena
-            res += ChrToFlt(*(x+j))*powJFlt(10,i); //Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
+    }else if(dotcount == 0)
+    {
+        //Si el punto está al principio de la cadena
+        x += 1; //Avanza un carácter en la cadena para ignorar el punto
+        for(i = 1, j = 0; i <= strlen(x); i++, j++) //Itera sobre cada carácter de la cadena
+            res += ChrToFlt(*(x+j))*powJFlt(10,-i);//Convierte el carácter a flotante y lo multiplica por la potencia de 10 correspondiente
         }else if(dotcount == 1) { //Si el punto está en la segunda posición 
                 if(*x == '-'){ //Si el número es negativo
                     for(i = -1, j=2; j < strlen(x); i--,j++) //Itera sobre cada carácter de la cadena, ignorando el signo negativo y el punto
