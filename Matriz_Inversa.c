@@ -454,7 +454,7 @@ int isFloat(char *x){
     else{
         if(CountDot(x) == 0 || CountDot(x) == 1) { //Si la cadena no contiene puntos o solo contiene un punto
             for(i = 0; i < strlen(x); i++){ //Recorre cada carácter de la cadena
-                if(!(*(x + i))) //Si el carácter no es un dígito ni un punto
+                if(!(isdigitJ(*(x+i)) || *(x+i) == '.')) //Si el carácter no es un dígito ni un punto
                     return 0; //Regresa falso
             }
             return 1; //Regresa verdadero 
